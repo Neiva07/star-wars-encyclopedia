@@ -2,8 +2,9 @@ import React, {Component} from 'react';
 import Paper from '@material-ui/core/Paper';
 import withStyles from '@material-ui/core/styles/withStyles';
 import {Route, Switch, Link} from 'react-router-dom';
-import Search from './Search'
 import CharInfo from './CharInfo'
+import * as apiCalls from './fetchAPI'
+import Search from './Search';
 
 const styles = theme => ({
   main: {
@@ -34,16 +35,22 @@ class MainPage extends Component {
         this.setState({character})
     }
     componentDidUpdate(prevProps, prevState) {
-        if(this.state.character !== prevState.character){
-            //fetch data
+        const {character} = this.state;
+        if(character !== prevState.character){
+            const data = apiCalls.getCharInfo(character);
+            console.log(data);
             //change route(Link to)
         }
+    }
+    async fetchData (character) {
+        const data = await apiCalls.getCharInfo(character);
+        console.log(data);
     }
     render() {
         const {character} = this.state;
         return (
             <Switch>
-                <Route exact path="/" component={Search}/>
+                <Route exact path="/" render={props => <Search {...props} fetchData={this.fetchData} /> } />
                 <Route path="/:character" component={CharInfo} /> 
             </Switch>
         )
