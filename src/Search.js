@@ -3,15 +3,17 @@ import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
 import FormControl from '@material-ui/core/FormControl'
 import InputLabel from '@material-ui/core/InputLabel';
+import Avatar from '@material-ui/core/Avatar';
 import Paper from '@material-ui/core/Paper';
 import withStyles from '@material-ui/core/styles/withStyles';
 import {Link} from 'react-router-dom'
+import avatar from './DarthAvatar.png';
 
 
 const styles = theme => ({
   search: {
     width: 'auto',
-    display: 'block', // Fix IE 11 issue.
+    display: 'block',  
     marginLeft: theme.spacing.unit * 3,
     marginRight: theme.spacing.unit * 3,
     [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
@@ -30,6 +32,8 @@ const styles = theme => ({
   avatar: {
     margin: theme.spacing.unit,
     backgroundColor: theme.palette.secondary.main,
+    width: '100px',
+    height: '100px'
   },
   form: {
     width: '100%',
@@ -51,6 +55,7 @@ class Search extends Component {
         return (
             <main className={classes.search}>
                  <Paper className={classes.paper}>
+                    <Avatar className={classes.avatar} alt="SW avatar" src={avatar} />
                     <form
                       className={classes.form}
                       onSubmit={this.handleSubmit}
