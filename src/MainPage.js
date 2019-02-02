@@ -2,59 +2,60 @@ import React, {Component} from 'react';
 import Paper from '@material-ui/core/Paper';
 import withStyles from '@material-ui/core/styles/withStyles';
 import {Route, Switch, Link} from 'react-router-dom';
-import CharInfo from './CharInfo'
+import CharProfile from './CharProfile'
 import * as apiCalls from './fetchAPI'
 import Search from './Search';
-
-const styles = theme => ({
-  main: {
-    width: 'auto',
-    display: 'block',
-    marginLeft: theme.spacing.unit * 3,
-    marginRight: theme.spacing.unit * 3,
-    [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
-      width: 400,
-      marginLeft: 'auto',
-      marginRight: 'auto',
-    },
-  },
-  paper: {
-    marginTop: theme.spacing.unit * 8,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
-  }
-});
+import {withRouter} from 'react-router-dom';
 
 class MainPage extends Component {
-        state = {
-        }
-    setSearch = (char) => {
-        const character = char;
-        this.setState({character})
+    constructor(props){
+        super(props);
+        this.state = {
+            charData : {}
+           }
+        this.fetchData = this.fetchData.bind(this);
+        this.filteredData = this.filteredData.bind(this);
     }
     componentDidUpdate(prevProps, prevState) {
-        const {character} = this.state;
-        if(character !== prevState.character){
-            const data = apiCalls.getCharInfo(character);
-            console.log(data);
-            //change route(Link to)
-        }
+        const {personalInfo} = this.state.charData;
+        if(personalInfo !== prevState.charData.personalInfo)
+            this.props.history.push(`/${personalInfo.name}`)
     }
+
     async fetchData (character) {
-        const data = await apiCalls.getCharInfo(character);
-        console.log(data);
+        const rawProfileData = await apiCalls.getCharInfo(character);
+        const charData = this.filteredData(rawProfileData)
+        this.setState({charData})
     }
+
+    filteredData(rawProfileData) {
+        let category = "";
+        const charData = Object.keys(rawProfileData)
+            .filter(key => key!== "created" && key !== "edited" && key!== "url" && rawProfileData[key] !== "n/a" && rawProfileData[key].length > 0)
+            .reduce((acc, key) => {
+                if(rawProfileData[key].slice(0,4) !== "http" && !Array.isArray(rawProfileData[key])){
+                    category = "personalInfo";
+                }else {
+                    category = "httpRequests";
+                }
+                Object.assign(acc[category], {[key] : rawProfileData[key]});
+                return acc;
+            }, {
+                personalInfo : {},
+                httpRequests: {}
+            })
+        return charData;
+    }
+
     render() {
-        const {character} = this.state;
+        const {charData} = this.state;
         return (
             <Switch>
                 <Route exact path="/" render={props => <Search {...props} fetchData={this.fetchData} /> } />
-                <Route path="/:character" component={CharInfo} /> 
+                { charData.personalInfo  ? <Route path={`/:${charData.personalInfo.name}`} render={props => <CharProfile {...props} charData={charData}/>} /> : null} 
             </Switch>
         )
     }
 }
 
-export default withStyles(styles)(MainPage);
+export default withRouter(MainPage);
