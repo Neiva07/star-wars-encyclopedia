@@ -18,13 +18,27 @@ function multipleHttpRequests(arrayOfUrls) {
 }
 
 export async function getMoreInfo(httpRequestsObj) {
-     const data = Promise.all(
-            Object.keys(httpRequestsObj)
-                .map(key => (
-                    Array.isArray(httpRequestsObj[key]) ? multipleHttpRequests(httpRequestsObj[key]) : singleHttpRequest(httpRequestsObj[key])  
-                ))).then(responses => {
-                        return responses.map(response => (Array.isArray(response) ? response.map(pro => pro) : response))    
-                })
-    console.log(data);
-    return data
+     const arrayData = await Promise.all(Object.keys(httpRequestsObj)
+        .map(key => { 
+            if(Array.isArray(httpRequestsObj[key])){
+               return Promise.all(multipleHttpRequests(httpRequestsObj[key])) 
+            } else  return singleHttpRequest(httpRequestsObj[key])
+        }))
+        .then(responsePromiseAll => {
+           return  responsePromiseAll.map(responseEachKey => {
+                if(Array.isArray(responseEachKey)){
+                    return responseEachKey.map(resEachRequest => resEachRequest.data)
+                } else {
+                    return responseEachKey.data; 
+                }
+            })
+        })
+      const keysArray = Object.keys(httpRequestsObj)
+      const objData = arrayData.reduce((acc, arr, ind) => {
+           acc[keysArray[ind]] = arr;
+           return acc;
+        }, {})
+        console.log(objData)
+        return objData
 }
+

@@ -35,34 +35,38 @@ class CharInfo extends Component {
         super(props);
         this.state = {
         }
+        this.fetchComplementedData = this.fetchComplementedData.bind(this);
     }
 
     componentDidMount() {
-        const {charData} = this.props; 
-        console.log(apiCalls.getMoreInfo(charData.httpRequests))
-       //new apicalls to urls from the character 
+        this.fetchComplementedData();
+      //new apicalls to urls from the character 
     }
      stringProcessed(string) {
              let stringProcessed = "";
              stringProcessed = string.charAt(0).toUpperCase() + string.slice(1);
              const mark = string.indexOf("_")
               if(mark !== -1){
-                  console.log('kk')
                   return stringProcessed.slice(0, mark) +  " " + stringProcessed.replace("_", "").charAt(mark).toUpperCase() + stringProcessed.slice(mark +2 );
               }
              return stringProcessed;
          }
+    async fetchComplementedData() {
+        const {charData} = this.props; 
+        const data = await apiCalls.getMoreInfo(charData.httpRequests)
+        console.log(data)
+        this.setState({data})
+    }
 
         render(){
     const {charData, classes} = this.props;
-    console.log(charData);
         const personalInfoData = (<List>
                 {Object.keys(charData.personalInfo).map(detail =>{ 
                     const newKey = this.stringProcessed(detail) 
                     const newAttribute= this.stringProcessed(charData.personalInfo[detail]) 
                  return ( <ListItem key={newKey}>
                         <ListItemText primary={newKey} secondary={charData.personalInfo[newKey]} />
-                        <Typography variant="body4">{newAttribute}</Typography>
+                        <Typography variant="body1">{newAttribute}</Typography>
                     </ListItem>
                     )
                 })}
