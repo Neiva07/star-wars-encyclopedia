@@ -38,30 +38,44 @@ class CharInfo extends Component {
     }
 
     componentDidMount() {
-       // function to separe personal detais, https and arrays
+        const {charData} = this.props; 
+        console.log(apiCalls.getMoreInfo(charData.httpRequests))
        //new apicalls to urls from the character 
     }
-    stringProcessing(string) {
-    }
+     stringProcessed(string) {
+             let stringProcessed = "";
+             stringProcessed = string.charAt(0).toUpperCase() + string.slice(1);
+             const mark = string.indexOf("_")
+              if(mark !== -1){
+                  console.log('kk')
+                  return stringProcessed.slice(0, mark) +  " " + stringProcessed.replace("_", "").charAt(mark).toUpperCase() + stringProcessed.slice(mark +2 );
+              }
+             return stringProcessed;
+         }
+
         render(){
     const {charData, classes} = this.props;
     console.log(charData);
+        const personalInfoData = (<List>
+                {Object.keys(charData.personalInfo).map(detail =>{ 
+                    const newKey = this.stringProcessed(detail) 
+                    const newAttribute= this.stringProcessed(charData.personalInfo[detail]) 
+                 return ( <ListItem key={newKey}>
+                        <ListItemText primary={newKey} secondary={charData.personalInfo[newKey]} />
+                        <Typography variant="body4">{newAttribute}</Typography>
+                    </ListItem>
+                    )
+                })}
+                </List> 
+                ) 
         return( 
             <main className={classes.main}>
                 <Paper className={classes.paper}>
-                    <List>
-                    {Object.keys(charData.personalInfo).map(detail => (
-                        <ListItem key={detail}>
-                            <ListItemText primary={detail} secondary={charData.personalInfo[detail]} />
-                        </ListItem>
-                    ))}
-                    
-                    </List> 
+                    {personalInfoData}
                 </Paper>
             </main>
             
         );
     }
 }
-
 export default withStyles(styles)(CharInfo);
