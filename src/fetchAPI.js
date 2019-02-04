@@ -38,7 +38,6 @@ export async function getMoreInfo(httpRequestsObj) {
            acc[keysArray[ind]] = arr;
            return acc;
         }, {})
-        console.log(objData)
         return objData
 }
 
