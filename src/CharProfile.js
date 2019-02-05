@@ -7,7 +7,12 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import * as apiCalls from './fetchAPI';
+import * as auxFunctions from './auxFunctions';
 import {Link, Route, Switch} from 'react-router-dom'
+import PersonalInfoList from './PersonalInfoList';
+import RequestedDataList from './RequestedDataList';
+import SpecDetails from './SpecDetails'
+
 
 const styles = theme => ({
   main: {
@@ -15,8 +20,8 @@ const styles = theme => ({
     display: 'block', 
     marginLeft: theme.spacing.unit * 3,
     marginRight: theme.spacing.unit * 3,
+    flexGrow: 1,
     [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
-      width: 400,
     },
   },
   paper: {
@@ -40,87 +45,52 @@ class CharInfo extends Component {
     componentDidMount() {
         this.fetchComplementedData();
     }
-     stringProcessed(string) {
-             let stringProcessed = "";
-            console.log(string)
-             stringProcessed = string.charAt(0).toUpperCase() + string.slice(1);
-             const mark = string.indexOf("_")
-              if(mark !== -1){
-                  return stringProcessed.slice(0, mark) +  " " + stringProcessed.replace("_", "").charAt(mark).toUpperCase() + stringProcessed.slice(mark +2 );
-              }
-             return stringProcessed;
-         }
+     
     async fetchComplementedData() {
         const {charData} = this.props; 
         const dataRequested = await apiCalls.getMoreInfo(charData.httpRequests)
         this.setState({dataRequested})
     }
-    //detailsInfo = (category, name) => <Link to={`${this.props.match.url}/${category}/${name}`} {...props} />
 
         render(){
     const {charData, classes} = this.props;
     const {dataRequested} = this.state;
-        const personalInfoData = (<List>
-                {Object.keys(charData.personalInfo).map(detail =>{ 
-                    const processedDetail = this.stringProcessed(detail) 
-                    const newAttribute= this.stringProcessed(charData.personalInfo[detail]) 
-                 return ( <ListItem key={processedDetail}>
-                        <ListItemText primary={processedDetail} secondary={charData.personalInfo[processedDetail]} />
-                        <Typography variant="body1">{newAttribute}</Typography>
-                    </ListItem>
-                    )
-                })}
-                </List> 
-                ) 
-        const moreInfoRequested = ( <div>
-            {Object.keys(dataRequested).map((detail, i) => {
-                 let processedDetail = this.stringProcessed(detail)
-                        let name = "";
-                        detail === "films" ? name = "title" : name = "name";
-                    if(Array.isArray(dataRequested[detail])){
-                        return (
-                        <List>
-                         <Typography variant="h6" gutterBottom>
-                            {processedDetail} 
-                        </Typography>
-                        {dataRequested[detail].map(indDet => {
-                        return ( 
-                            <ListItem button component={Link} to={`${this.props.match.url}/${detail}/${indDet[name]}`}>
-                                    <ListItemText primary={this.stringProcessed(indDet[name])} />
-                                </ListItem>
-                        )})}
-                            </List>
-                        )}
-                else {
-                    return (
-                        <List>
-                            <Typography variant="h6">
-                                {processedDetail}
-                            </Typography> 
-                            <ListItem>
-                                <ListItemText primary={this.stringProcessed(dataRequested[detail][name])} /> 
-                            </ListItem>
-                        </List>
-                    )
-                }
-                })}
-                </div> )
-               return( 
+       return( 
             <main className={classes.main}>
+                <Grid container spacing={24}>
+                    <Grid item xs={4}> 
+                        <Paper className={classes.paper}>
+                             <Typography variant="h6" gutterBottom>
+                                Peronsal Details 
+                              </Typography>
+                            <PersonalInfoList personalInfo={charData.personalInfo} />
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={4}>
                 <Paper className={classes.paper}>
-                     <Typography variant="h6" gutterBottom>
-                        Peronsal Details 
-                      </Typography>
-                    {personalInfoData}
-                    {moreInfoRequested}
+                    <RequestedDataList status={false} dataRequested={dataRequested} url={this.props.match.url}/> 
                 </Paper>
+                    </Grid>
                 <Switch>
-                    <Route path={`${this.props.match.url}/:category/:name`}>
+                    <Route 
+                    path={`${this.props.match.url}/:category/:id`} 
+                    children={({match})=> (
+                        <SpecDetails 
+                            detailData={dataRequested[match.params.category][match.params.id]} 
+                            classes={classes}/>)
+                    }/>
+                    <Route 
+                    path={`${this.props.match.url}/:category`} 
+                    children={({match})=> (
+                        <SpecDetails 
+                            detailData={dataRequested[match.params.category]} 
+                            classes={classes}/>)
+                    }/>
 
-                   </Route> 
                 </Switch>
+               </Grid>
             </main>
-            
+                
         );
     }
 }

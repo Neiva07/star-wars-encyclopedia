@@ -6,6 +6,7 @@ import CharProfile from './CharProfile'
 import * as apiCalls from './fetchAPI'
 import Search from './Search';
 import {withRouter} from 'react-router-dom';
+import * as auxFunctions from './auxFunctions';
 
 class MainPage extends Component {
     constructor(props){
@@ -14,7 +15,6 @@ class MainPage extends Component {
             charData : {}
            }
         this.fetchData = this.fetchData.bind(this);
-        this.filteredData = this.filteredData.bind(this);
     }
     componentDidUpdate(prevProps, prevState) {
         const {personalInfo} = this.state.charData;
@@ -24,27 +24,8 @@ class MainPage extends Component {
 
     async fetchData (character) {
         const rawProfileData = await apiCalls.getCharInfo(character);
-        const charData = this.filteredData(rawProfileData)
+        const charData = auxFunctions.filteredData(rawProfileData)
         this.setState({charData})
-    }
-
-    filteredData(rawProfileData) {
-        let category = "";
-        const charData = Object.keys(rawProfileData)
-            .filter(key => key!== "created" && key !== "edited" && key!== "url" && rawProfileData[key] !== "n/a" && rawProfileData[key].length > 0)
-            .reduce((acc, key) => {
-                if(rawProfileData[key].slice(0,4) !== "http" && !Array.isArray(rawProfileData[key])){
-                    category = "personalInfo";
-                }else {
-                    category = "httpRequests";
-                }
-                Object.assign(acc[category], {[key] : rawProfileData[key]});
-                return acc;
-            }, {
-                personalInfo : {},
-                httpRequests: {}
-            })
-        return charData;
     }
 
     render() {
