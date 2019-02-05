@@ -1,14 +1,10 @@
 import React, {Component} from 'react';
 import Paper from '@material-ui/core/Paper';
 import withStyles from '@material-ui/core/styles/withStyles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import * as apiCalls from './fetchAPI';
-import * as auxFunctions from './auxFunctions';
-import {Link, Route, Switch} from 'react-router-dom'
+import {Route, Switch} from 'react-router-dom'
 import PersonalInfoList from './PersonalInfoList';
 import RequestedDataList from './RequestedDataList';
 import SpecDetails from './SpecDetails'

@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const ROOT = "https://swapi.co/api/people/?search=";
 
+//Receive a string of a character and search into the api
 export async function getCharInfo(char) {
     const finalUrl = ROOT + char ;
     return singleHttpRequest(finalUrl).then(response => response.data.results[0]);

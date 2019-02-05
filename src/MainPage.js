@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
-import Paper from '@material-ui/core/Paper';
-import withStyles from '@material-ui/core/styles/withStyles';
-import {Route, Switch, Link} from 'react-router-dom';
+import {Route, Switch} from 'react-router-dom';
 import CharProfile from './CharProfile'
 import * as apiCalls from './fetchAPI'
 import Search from './Search';

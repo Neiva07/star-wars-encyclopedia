@@ -32,7 +32,7 @@ export default class SpecDetails extends Component {
         }
     }
     updatedSpecCard() {
-        const {detailData, classes} = this.props;
+        const {detailData} = this.props;
         const treatedDetails = auxFunctions.filteredData(detailData);
         this.setState({...treatedDetails})
     }
