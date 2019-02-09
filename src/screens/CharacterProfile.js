@@ -3,10 +3,10 @@ import Paper from '@material-ui/core/Paper';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import * as apiCalls from './fetchAPI';
+import * as apiCalls from '../lib/utils/fetchData';
 import {Route, Switch} from 'react-router-dom'
-import PersonalInfoList from './PersonalInfoList';
-import RequestedDataList from './RequestedDataList';
+import PersonalInfoList from '../components/SingleRequestList';
+import RequestedDataList from '../components/MultipleRequestList';
 import SpecDetails from './SpecDetails'
 
 

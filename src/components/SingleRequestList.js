@@ -1,5 +1,5 @@
 import React from 'react';
-import * as auxFunctions from './auxFunctions'
+import * as auxFunctions from '../lib/utils/auxFunctions'
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Typography from '@material-ui/core/Typography';

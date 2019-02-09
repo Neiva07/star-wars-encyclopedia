@@ -6,7 +6,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Avatar from '@material-ui/core/Avatar';
 import Paper from '@material-ui/core/Paper';
 import withStyles from '@material-ui/core/styles/withStyles';
-import avatar from './DarthAvatar.png';
+import avatar from '../assets/image/DarthAvatar.png';
 
 
 const styles = theme => ({

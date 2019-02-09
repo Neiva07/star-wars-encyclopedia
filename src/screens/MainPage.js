@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import {Route, Switch} from 'react-router-dom';
-import CharProfile from './CharProfile'
-import * as apiCalls from './fetchAPI'
-import Search from './Search';
+import CharProfile from './CharacterProfile'
+import * as apiCalls from '../lib/utils/fetchData'
+import Search from '../components/Search';
 import {withRouter} from 'react-router-dom';
-import * as auxFunctions from './auxFunctions';
+import * as auxFunctions from '../lib/utils/auxFunctions';
 
 class MainPage extends Component {
     constructor(props){

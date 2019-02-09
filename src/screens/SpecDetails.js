@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
-import * as auxFunctions from './auxFunctions'
-import PersonalInfoList from './PersonalInfoList';
+import * as auxFunctions from '../lib/utils/auxFunctions'
+import PersonalInfoList from '../components/SingleRequestList';
 import Paper from '@material-ui/core/Paper';
-import RequestedDataList from './RequestedDataList';
+import RequestedDataList from '../components/MultipleRequestList';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid'
-import * as apiCalls from './fetchAPI';
+import * as apiCalls from '../lib/utils/fetchData';
 
 
 export default class SpecDetails extends Component {
